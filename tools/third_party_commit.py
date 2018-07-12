@@ -9,7 +9,9 @@
 
 import os
 from os.path import join
+import subprocess
 from util import run, remove_and_symlink
+import shutil
 
 root_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 third_party_path = join(root_path, "third_party")
@@ -19,15 +21,17 @@ try:
 except:
     pass
 os.chdir(third_party_path)
-remove_and_symlink("../gclient_config.py", ".gclient")
-remove_and_symlink("../package.json", "package.json")
-remove_and_symlink("../yarn.lock", "yarn.lock")
-remove_and_symlink("v8/third_party/googletest", "googletest")
-remove_and_symlink("v8/third_party/jinja2", "jinja2")
-remove_and_symlink("v8/third_party/llvm-build", "llvm-build")
-remove_and_symlink("v8/third_party/markupsafe", "markupsafe")
-run(["yarn"])
-run(["gclient", "sync", "--reset", "--shallow", "--no-history", "--nohooks"])
+gitdirs = subprocess.check_output("find . | egrep .git$", shell=True).strip().split("\n")
+for gd in gitdirs:
+    if gd == "./.git" or gd == ".git":
+        continue
+    repo_git_dir = os.path.join(third_party_path, gd)
+    repo = os.path.dirname(repo_git_dir)
+    os.chdir(repo)
+    sha = subprocess.check_output("git rev-list HEAD -1", shell=True).strip()
+    # TODO Sanity check sha against those stored in gclient_config.py.
+    print sha, repo
+    print "rm -rf " + repo_git_dir
+    shutil.rmtree(repo_git_dir) # Delete the .git directories.
 
-# cd third_party
-# find . -type f | grep -v "\.git" | xargs -I% git add -f --no-warn-embedded-repo "%"
+os.chdir(third_party_path)

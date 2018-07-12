@@ -56,41 +56,42 @@ Roadmap is [here](https://github.com/ry/deno/blob/master/Roadmap.md).
 
 Also see this presentation: http://tinyclouds.org/jsconf2018.pdf
 
-### Github Noise
-
 I am excited about all the interest in this project. However, do understand that this
 is very much a non-functional prototype. There's a huge amount of heavy lifting to do.
 Unless you are participating in that, please maintain radio silence on github. This
 includes submitting trivial PRs (like improving README build instructions).
 
-## Compile instructions
+## Build instructions
 
-Get [Depot Tools](http://commondatastorage.googleapis.com/chrome-infra-docs/flat/depot_tools/docs/html/depot_tools_tutorial.html#_setting_up) and make sure it's in your path.
+To ensure reproducable builds, Deno has most of its dependencies in a git
+submodules.  However, you need
+[rustc](https://www.rust-lang.org/en-US/install.html) installed separately.
 
-You need [yarn](https://yarnpkg.com/lang/en/docs/install/) installed.
+You probably want
+[ccache](https://developer.mozilla.org/en-US/docs/Mozilla/Developer_guide/Build_Instructions/ccache)
+installed too.
 
-You need [rust](https://www.rust-lang.org/en-US/install.html) installed.
+Fetch the code and dependencies.
 
-You might want  [ccache](https://developer.mozilla.org/en-US/docs/Mozilla/Developer_guide/Build_Instructions/ccache) installed.
-
-Fetch the third party dependencies.
-
-    ./tools/build_third_party.py
+    git clone --recurse-submodules https://github.com/ry/deno.git
+    cd deno
+    ./tools/run_hooks.py
 
 Generate ninja files.
 
+    gn gen out/Release --args='is_official_build=true'
+    # Also try:
     gn gen out/Default
-    gn gen out/Release --args='cc_wrapper="ccache" is_official_build=true'
     gn gen out/Debug --args='cc_wrapper="ccache" is_debug=true '
 
 Then build with ninja (will take a while to complete):
 
-    ninja -C out/Debug/ deno
+    ninja -C out/Release/ deno
 
 Other useful commands:
 
-    gn args out/Debug/ --list
-    gn args out/Debug/
-    gn desc out/Debug/ :deno
+    gn args out/Release/ --list
+    gn args out/Release/
+    gn desc out/Release/ :deno
     gn help
 
