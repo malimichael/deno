@@ -44,8 +44,7 @@ install:
  - gn gen $BUILD_PATH --args='is_debug=false use_allocator="none" cc_wrapper="ccache" use_custom_libcxx=false use_sysroot=false'
  - gn args $BUILD_PATH --list
  - ccache -s
- # Travis hangs without -j2 argument to ninja.
- - ninja -j2 -C $BUILD_PATH :all
+ - ./tools/build.py
 script:
  - ./tools/lint.py
  - $BUILD_PATH/test_cc

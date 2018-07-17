@@ -76,6 +76,7 @@ Fetch the code and dependencies.
     git clone --recurse-submodules https://github.com/ry/deno.git
     cd deno
     ./tools/run_hooks.py
+    ./tools/build.py
 
 Generate ninja files.
 
