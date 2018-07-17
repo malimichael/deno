@@ -21,7 +21,8 @@ try:
 except:
     pass
 os.chdir(third_party_path)
-gitdirs = subprocess.check_output("find . | egrep .git$", shell=True).strip().split("\n")
+gitdirs = subprocess.check_output(
+    "find . | egrep .git$", shell=True).strip().split("\n")
 for gd in gitdirs:
     if gd == "./.git" or gd == ".git":
         continue
@@ -32,6 +33,6 @@ for gd in gitdirs:
     # TODO Sanity check sha against those stored in gclient_config.py.
     print sha, repo
     print "rm -rf " + repo_git_dir
-    shutil.rmtree(repo_git_dir) # Delete the .git directories.
+    shutil.rmtree(repo_git_dir)  # Delete the .git directories.
 
 os.chdir(third_party_path)

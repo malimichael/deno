@@ -10,10 +10,13 @@ os.chdir(root_path)
 
 
 def download(fn):
-    run([ os.path.join(depot_tools_path + '/download_from_google_storage.py'),
-        '--no_resume',
-        '--platform=' + sys.platform, '--no_auth', '--bucket', 'chromium-gn', '-s',
-        os.path.join(root_path, fn) ])
+    run([
+        os.path.join(depot_tools_path + '/download_from_google_storage.py'),
+        '--no_resume', '--platform=' + sys.platform, '--no_auth', '--bucket',
+        'chromium-gn', '-s',
+        os.path.join(root_path, fn)
+    ],
+        quiet=True)
 
 
 if sys.platform == 'win32':
@@ -22,4 +25,5 @@ elif sys.platform == 'darwin':
     download("third_party/v8/buildtools/mac/gn.sha1")
 elif sys.platform.startswith('linux'):
     download("third_party/v8/buildtools/linux64/gn.sha1")
-run(['python', 'third_party/v8/tools/clang/scripts/update.py', '--if-needed'])
+run(['python', 'third_party/v8/tools/clang/scripts/update.py', '--if-needed'],
+    quiet=True)

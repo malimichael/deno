@@ -16,9 +16,7 @@ third_party_path = join(root_path, "third_party")
 depot_tools_path = join(third_party_path, "depot_tools")
 gn_path = join(depot_tools_path, "gn")
 ninja_path = join(depot_tools_path, "ninja")
-llvm_build_path = join(third_party_path, "v8/third_party/llvm-build/")
-if not os.path.isdir(llvm_build_path):
-    run(["python", "tools/run_hooks.py"], quiet=True)
+run(["python", "tools/run_hooks.py"], quiet=True)
 
 # TODO(ry) parse argv for --mode and --out-dir.
 mode = "default"
