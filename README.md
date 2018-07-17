@@ -71,23 +71,11 @@ You probably want
 [ccache](https://developer.mozilla.org/en-US/docs/Mozilla/Developer_guide/Build_Instructions/ccache)
 installed too.
 
-Fetch the code and dependencies.
+To build:
 
     git clone --recurse-submodules https://github.com/ry/deno.git
     cd deno
-    ./tools/run_hooks.py
     ./tools/build.py
-
-Generate ninja files.
-
-    gn gen out/Release --args='is_official_build=true'
-    # Also try:
-    gn gen out/Default
-    gn gen out/Debug --args='cc_wrapper="ccache" is_debug=true '
-
-Then build with ninja (will take a while to complete):
-
-    ninja -C out/Release/ deno
 
 Other useful commands:
 

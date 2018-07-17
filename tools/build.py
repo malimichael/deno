@@ -18,16 +18,17 @@ gn_path = join(depot_tools_path, "gn")
 ninja_path = join(depot_tools_path, "ninja")
 llvm_build_path = join(third_party_path, "v8/third_party/llvm-build/")
 if not os.path.isdir(llvm_build_path):
-    run(["python", "tools/run_hooks.py"])
+    run(["python", "tools/run_hooks.py"], quiet=True)
 
 # TODO(ry) parse argv for --mode and --out-dir.
 mode = "default"
 out_path = join("out", mode)
 target = sys.argv[1] if len(sys.argv) > 1 else "deno"
 
-gn_cmd = [gn_path, "gen", out_path]
-if len(gn_args) > 0:
-    gn_cmd += ["--args=%s" % " ".join(gn_args)]
-run(gn_cmd)
+if not os.path.isdir(out_path):
+    gn_cmd = [gn_path, "gen", out_path]
+    if len(gn_args) > 0:
+        gn_cmd += ["--args=%s" % " ".join(gn_args)]
+    run(gn_cmd, quiet=True)
 # Travis hangs without -j2 argument to ninja.
-run([ninja_path, "-C", out_path, target])
+run([ninja_path, "-C", out_path, target], quiet=True)
